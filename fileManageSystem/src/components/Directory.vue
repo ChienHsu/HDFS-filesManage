@@ -18,7 +18,8 @@
 
 <script>
 import {API} from '@/api/apiService'
-import moment from 'moment'	
+import moment from 'moment'
+import axios from 'axios'	
 	export default {
 		data() {
 			return {
@@ -55,11 +56,7 @@ import moment from 'moment'
 										},params.row.pathSuffix)
 								]);
 							}else if(params.row.type === 'FILE'){
-								return h('div',{
-									style:{
-										cursor:'pointer'
-									}
-									},[
+								return h('div',{},[
 										h('Icon',{
 											props:{
 												type:'ios-paper'
@@ -74,7 +71,8 @@ import moment from 'moment'
 							}else{
 								return h('div',{
 									style:{
-										cursor:'pointer'
+										cursor:'pointer',
+										'font-weight':'bold'
 									},
 									on:{
 										click:()=>{
@@ -112,13 +110,13 @@ import moment from 'moment'
 						render:(h,params)=>{
 							if(params.row.blockSize !== undefined){
 								if(params.row.blockSize>0 && params.row.blockSize<1024){
-									return h('span',`${params.row.blockSize}B`)
+									return h('span',`${params.row.blockSize}B`);
 								}else if(params.row.blockSize>=1024 && params.row.blockSize<1048576){
-									return h('span',`${Math.ceil(params.row.blockSize/1024)}KB`)
+									return h('span',`${Math.ceil(params.row.blockSize/1024)}KB`);
 								}else if(params.row.blockSize>=1048576){
-									return h('span',`${Math.ceil(params.row.blockSize/1024/1024)}MB`)
+									return h('span',`${Math.ceil(params.row.blockSize/1024/1024)}MB`);
 								}else{
-									return h('span',`0B`)
+									return h('span',`0B`);
 								}
 							}
 						}
@@ -126,12 +124,28 @@ import moment from 'moment'
 					{
 						title:'Action',
 						render:(h,params)=>{
-							if(params.row.type !== 'headBar'){
-								return h('div',{
-
-								},[
+							if(params.row.type === 'FILE'){
+								return h('div',{},[
+									h('a',{
+										style:{
+											cursor:'pointer',
+											color:'#515A6E'
+										},
+										domProps:{
+											title:'download',
+											href:`/api/webhdfs/v1/${this.currFilePath.substr(1)}/${params.row.pathSuffix}?op=OPEN`
+										}
+									},[h('Icon',{
+										props:{
+											type:'ios-cloud-download'
+										},
+										style:{
+											'font-size':'16px'
+										}
+									})]),
 									h('Icon',{
 										style:{
+											'margin-left':'10px',
 											cursor:'pointer',
 											'font-size':'16px'
 										},
@@ -146,21 +160,23 @@ import moment from 'moment'
 										domProps:{
 											title:'delete'
 										}
-									}),
-									h('Icon',{
-										style:{
-											'margin-left':'10px',
-											cursor:'pointer',
-											'font-size':'16px'
-										},
-										props:{
-											type:'ios-cloud-download-outline'
-										},
-										domProps:{
-											title:'download'
-										}
-									},this.currFilePath)
+									})
 								]);
+							}else if(params.row.type === 'DIRECTORY'){
+								return 	h('Icon',{
+											style:{
+												cursor:'pointer',
+												'font-size':'16px'
+											},								
+											props:{
+												type:'md-trash'
+											},
+											on:{
+												click:()=>{
+													this.showModal = true;
+												}
+											}
+										});
 							}
 						}
 					}
@@ -212,8 +228,7 @@ import moment from 'moment'
 						}
 					]
 				}
-				var url = `/webhdfs/v1/${filePath}?op=LISTSTATUS`;
-				API('get',url,{}).then(res=>{
+				API('get',`/webhdfs/v1/${filePath}?op=LISTSTATUS`,{}).then(res=>{
 					res.FileStatuses.FileStatus.forEach((item)=>{
 						this.fileStatus.push(item);
 					});
