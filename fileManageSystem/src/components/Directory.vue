@@ -110,11 +110,11 @@ import axios from 'axios'
 						render:(h,params)=>{
 							if(params.row.length !== undefined){
 								if(params.row.length>0 && params.row.length<1024){
-									return h('span',`${params.row.length}B`);
+									return h('span',`${params.row.length} B`);
 								}else if(params.row.length>=1024 && params.row.length<1048576){
-									return h('span',`${Math.ceil(params.row.length/1024)}KB`);
+									return h('span',`${(params.row.length/1024).toFixed(2)} KB`);
 								}else if(params.row.length>=1048576){
-									return h('span',`${Math.ceil(params.row.length/1024/1024)}MB`);
+									return h('span',`${(params.row.length/1024/1024).toFixed(2)} MB`);
 								}else{
 									return h('span','');
 								}
