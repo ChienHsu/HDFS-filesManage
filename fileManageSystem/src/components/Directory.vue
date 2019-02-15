@@ -106,17 +106,17 @@ import axios from 'axios'
 					},
 					{
 						title:'File Size',
-						key:'blockSize',
+						key:'length',
 						render:(h,params)=>{
-							if(params.row.blockSize !== undefined){
-								if(params.row.blockSize>0 && params.row.blockSize<1024){
-									return h('span',`${params.row.blockSize}B`);
-								}else if(params.row.blockSize>=1024 && params.row.blockSize<1048576){
-									return h('span',`${Math.ceil(params.row.blockSize/1024)}KB`);
-								}else if(params.row.blockSize>=1048576){
-									return h('span',`${Math.ceil(params.row.blockSize/1024/1024)}MB`);
+							if(params.row.length !== undefined){
+								if(params.row.length>0 && params.row.length<1024){
+									return h('span',`${params.row.length}B`);
+								}else if(params.row.length>=1024 && params.row.length<1048576){
+									return h('span',`${Math.ceil(params.row.length/1024)}KB`);
+								}else if(params.row.length>=1048576){
+									return h('span',`${Math.ceil(params.row.length/1024/1024)}MB`);
 								}else{
-									return h('span',`0B`);
+									return h('span','');
 								}
 							}
 						}
@@ -128,7 +128,6 @@ import axios from 'axios'
 								return h('div',{},[
 									h('a',{
 										style:{
-											cursor:'pointer',
 											color:'#515A6E'
 										},
 										domProps:{
@@ -242,7 +241,3 @@ import axios from 'axios'
 		}
 	}
 </script>
-
-<style>
-
-</style>
