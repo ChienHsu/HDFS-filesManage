@@ -11,7 +11,7 @@
 			title="Message Box"
 			@on-ok="ok"
 			@on-cancel="cancel">
-			<p>确认删除选中文件吗？</p>
+			<p>确认删除此目录或文件吗？</p>
 		</Modal>
 	</div>
 </template>
@@ -116,7 +116,7 @@ import axios from 'axios'
 								}else if(params.row.length>=1048576){
 									return h('span',`${(params.row.length/1024/1024).toFixed(2)} MB`);
 								}else{
-									return h('span','');
+									return h('span','-');
 								}
 							}
 						}
